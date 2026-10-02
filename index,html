@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MARKET LOAD KING — Official Telegram Portal</title>
+  <meta name="description" content="No-1 Market Load Channel. Match Load, Session Load, Toss Load. Real-time cricket and market intelligence.">
+  <meta name="theme-color" content="#030712">
+
+  <!-- Google Fonts & Font Awesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg: #030712;
+      --card-bg: rgba(11, 19, 38, 0.72);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-highlight: rgba(0, 210, 255, 0.25);
+      
+      --cyan: #00d2ff;
+      --cyan-glow: rgba(0, 210, 255, 0.4);
+      --tg-blue: #0088cc;
+      --gold: #fbbf24;
+      --gold-glow: rgba(251, 191, 36, 0.4);
+      --emerald: #10b981;
+      
+      --text-white: #ffffff;
+      --text-sub: #94a3b8;
+      --text-dim: #64748b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-white);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 14px 44px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Hardware-accelerated background Canvas */
+    #fx-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Ambient Glow Flares */
+    .glow-sphere {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(130px);
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.32;
+      will-change: transform;
+    }
+
+    .glow-cyan {
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--cyan) 0%, #0369a1 60%, transparent 100%);
+      animation: cyanPulse 7s ease-in-out infinite alternate;
+    }
+
+    .glow-gold {
+      bottom: -100px;
+      right: -100px;
+      width: 440px;
+      height: 440px;
+      background: radial-gradient(circle, var(--gold) 0%, #b45309 65%, transparent 100%);
+      opacity: 0.16;
+    }
+
+    @keyframes cyanPulse {
+      0% { transform: translateX(-50%) scale(0.92); opacity: 0.25; }
+      100% { transform: translateX(-50%) scale(1.12); opacity: 0.38; }
+    }
+
+    /* Glass Container */
+    .glass-card {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 470px;
+      background: var(--card-bg);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border: 1px solid var(--card-border);
+      border-radius: 36px;
+      padding: 34px 22px 30px;
+      box-shadow: 
+        0 30px 80px -15px rgba(0, 0, 0, 0.9),
+        0 0 0 1px rgba(255, 255, 255, 0.06),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    /* Top Nav / Status Ticker */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      padding: 0 4px;
+    }
+
+    .live-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.28);
+      color: #fca5a5;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 40px;
+      letter-spacing: 0.3px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background: #ef4444;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #ef4444;
+      animation: blink 1.1s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.75); }
+    }
+
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 5px 11px;
+      border-radius: 40px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    /* Logo Avatar Presentation */
+    .avatar-container {
+      position: relative;
+      width: 116px;
+      height: 116px;
+      margin: 0 auto 20px;
+    }
+
+    .avatar-crown {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 24px;
+      color: #fbbf24;
+      filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.9));
+      z-index: 15;
+      animation: crownFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes crownFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-5px); }
+    }
+
+    .neon-spinner {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #00d2ff, #2563eb, #fbbf24, #10b981, #00d2ff);
+      animation: rotateGlow 5s linear infinite;
+      filter: blur(4px);
+    }
+
+    @keyframes rotateGlow {
+      to { transform: rotate(360deg); }
+    }
+
+    .avatar-card {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #030712;
+      border: 3.5px solid #030712;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .avatar-card:hover .avatar-img {
+      transform: scale(1.06);
+    }
+
+    .verified-tick {
+      position: absolute;
+      bottom: 2px;
+      right: 4px;
+      z-index: 16;
+      background: linear-gradient(135deg, #0088cc, #00d2ff);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 13.5px;
+      border: 3.5px solid #030712;
+      box-shadow: 0 4px 12px rgba(0, 136, 204, 0.6);
+    }
+
+    /* Headings & Descriptions */
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      background: linear-gradient(180deg, #ffffff 15%, #bae6fd 60%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 35px rgba(0, 210, 255, 0.35);
+    }
+
+    .channel-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-bottom: 18px;
+    }
+
+    .id-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 3px 9px;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', monospace;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .id-pill:active {
+      transform: scale(0.95);
+      background: rgba(0, 210, 255, 0.15);
+    }
+
+    /* Real-Time Stats Banner */
+    .stats-card {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.85), rgba(7, 13, 26, 0.95));
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 20px;
+      padding: 15px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .stats-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--cyan), #2563eb);
+    }
+
+    .stats-info {
+      text-align: left;
+    }
+
+    .stats-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+      margin-bottom: 2px;
+    }
+
+    .stats-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .live-badge-mini {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--emerald);
+      background: rgba(16, 185, 129, 0.12);
+      padding: 2px 7px;
+      border-radius: 10px;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .stats-icon-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(0, 210, 255, 0.08);
+      border: 1px solid rgba(0, 210, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cyan);
+      font-size: 20px;
+    }
+
+    /* Pillars */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .pillar-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 10px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pillar-box:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(0, 210, 255, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .pillar-box i {
+      font-size: 17px;
+      margin-bottom: 2px;
+    }
+
+    .pillar-box:nth-child(1) i { color: #38bdf8; }
+    .pillar-box:nth-child(2) i { color: #fbbf24; }
+    .pillar-box:nth-child(3) i { color: #10b981; }
+
+    .pillar-box .p-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      color: #e2e8f0;
+      text-transform: uppercase;
+    }
+
+    .pillar-box .p-sub {
+      font-size: 9.5px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+
+    /* DUAL ULTRA CTA BUTTONS */
+    .cta-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .btn-action {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 16px 18px;
+      text-decoration: none;
+      border-radius: 20px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      will-change: transform, box-shadow;
+    }
+
+    .btn-action:active {
+      transform: scale(0.97);
+    }
+
+    /* CTA 1: Electric Telegram Blue */
+    .btn-tg-primary {
+      background: linear-gradient(135deg, #0088cc 0%, #0070a8 50%, #005682 100%);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      box-shadow: 
+        0 14px 35px -6px rgba(0, 136, 204, 0.65),
+        0 0 20px rgba(0, 210, 255, 0.3),
+        inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-tg-primary:hover {
+      box-shadow: 
+        0 18px 45px -4px rgba(0, 136, 204, 0.85),
+        0 0 30px rgba(0, 210, 255, 0.45);
+      transform: translateY(-2px);
+    }
+
+    /* CTA 2: VIP Gold Metallic Glass */
+    .btn-vip-secondary {
+      background: linear-gradient(135deg, rgba(32, 25, 14, 0.92) 0%, rgba(20, 15, 6, 0.96) 100%);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      box-shadow: 
+        0 12px 30px -8px rgba(251, 191, 36, 0.35),
+        inset 0 1px 1px rgba(254, 240, 138, 0.3);
+    }
+
+    .btn-vip-secondary:hover {
+      border-color: rgba(251, 191, 36, 0.7);
+      box-shadow: 
+        0 16px 36px -6px rgba(251, 191, 36, 0.55),
+        0 0 25px rgba(251, 191, 36, 0.25);
+      transform: translateY(-2px);
+    }
+
+    /* Continuous fluid light sheen */
+    .btn-action::after {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -80%;
+      width: 50%;
+      height: 220%;
+      background: linear-gradient(
+        75deg,
+        rgba(255, 255, 255, 0) 10%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0) 90%
+      );
+      transform: rotate(25deg);
+      animation: ultraShine 3.2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes ultraShine {
+      0% { left: -90%; }
+      30%, 100% { left: 160%; }
+    }
+
+    .btn-left {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      z-index: 2;
+      text-align: left;
+    }
+
+    .btn-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21px;
+      flex-shrink: 0;
+    }
+
+    .btn-tg-primary .btn-icon {
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-vip-secondary .btn-icon {
+      background: rgba(251, 191, 36, 0.16);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      color: #fbbf24;
+      box-shadow: 0 0 14px rgba(251, 191, 36, 0.35);
+    }
+
+    .btn-texts .b-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+
+    .btn-vip-secondary .btn-texts .b-title {
+      background: linear-gradient(135deg, #ffffff 0%, #fde68a 60%, #fbbf24 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .btn-texts .b-sub {
+      font-size: 11px;
+      font-weight: 500;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+
+    .btn-tg-primary .b-sub { color: #bae6fd; }
+    .btn-vip-secondary .b-sub { color: #fed7aa; }
+
+    .btn-badge {
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .btn-tg-primary .btn-badge {
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .btn-vip-secondary .btn-badge {
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      color: #030712;
+      box-shadow: 0 0 14px rgba(251, 191, 36, 0.6);
+      border: none;
+    }
+
+    /* Utilities & Actions */
+    .utility-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .util-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .util-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .util-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Trust Footer */
+    .trust-row {
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+
+    .trust-row span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .trust-row i {
+      color: var(--emerald);
+      font-size: 13px;
+    }
+
+    /* Glass Toast Notice */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      opacity: 0;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(0, 210, 255, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 16px rgba(0, 210, 255, 0.3);
+      backdrop-filter: blur(12px);
+      padding: 12px 22px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      z-index: 1000;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Ripple Effect */
+    .ripple-effect {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      background-color: rgba(255, 255, 255, 0.4);
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Ambient System -->
+  <canvas id="fx-canvas"></canvas>
+  <div class="glow-sphere glow-cyan"></div>
+  <div class="glow-sphere glow-gold"></div>
+
+  <!-- Main Card -->
+  <main class="glass-card">
+        
+ </div>
+    </div>
+
+    <!-- Center Avatar with Custom Logo from Image URL -->
+    <div class="avatar-container">
+      <i class="fa-solid fa-crown avatar-crown"></i>
+      <div class="neon-spinner"></div>
+      <div class="avatar-card">
+        <!-- Exact image URL specified with fallback -->
+        <img 
+          src="https://i.ibb.co/60xSzBvP/IMG-20261002-184838-472.jpg" 
+          alt="MARKET LOAD KING Logo" 
+          class="avatar-img"
+          loading="eager"
+          onerror="this.src='https://placehold.co/120x120/0a1324/00d2ff?text=MLK';"
+        >
+      </div>
+      <div class="verified-tick" title="Official Channel">
+        <i class="fa-solid fa-check"></i>
+      </div>
+    </div>
+
+    <!-- Channel Name & Metadata -->
+    <h1 class="brand-title">MARKET LOAD KING</h1>
+    <div class="channel-meta">
+      <span>No-1 Load Market Channel</span>
+      <span>•</span>
+     
+      </span>
+    </div>
+
+    <!-- Real-time Animated Subscribers -->
+    <div class="stats-card">
+      <div class="stats-info">
+        <div class="stats-tag">Subscribers Count</div>
+        <div class="stats-number">
+          <span id="subCount">100960</span>
+          <span class="live-badge-mini"><i class="fa-solid fa-arrow-trend-up"></i> 92K+</span>
+        </div>
+      </div>
+      <div class="stats-icon-badge">
+        <i class="fa-solid fa-users"></i>
+      </div>
+    </div>
+
+    <!-- Market Load Specialty Pillars -->
+    <div class="pillars-grid">
+      <div class="pillar-box">
+        <i class="fa-solid fa-bolt-lightning"></i>
+        <span class="p-title">Match Load</span>
+        <span class="p-sub">Live Movement</span>
+      </div>
+      <div class="pillar-box">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span class="p-title">Session Load</span>
+        <span class="p-sub">Over-By-Over</span>
+      </div>
+      <div class="pillar-box">
+        <i class="fa-solid fa-coins"></i>
+        <span class="p-title">Toss Load</span>
+        <span class="p-sub">100% Accurate</span>
+      </div>
+    </div>
+
+    <!-- DUAL JOIN BUTTONS (2 Join Button CTA) -->
+    <div class="cta-stack">
+      
+      <!-- Button 1: Main VIP Telegram Channel -->
+      <!-- Replace 'https://t.me/your_main_link' with your actual invite link -->
+      <a href="https://telegram.me/+JEMm-XMx9lM1NmZl" class="btn-action btn-tg-primary action-click" target="_blank" rel="noopener">
+        <div class="btn-left">
+          <div class="btn-icon">
+            <i class="fa-brands fa-telegram"></i>
+          </div>
+          <div class="btn-texts">
+            <div class="b-title">JOIN MAIN CHANNEL [VIP]</div>
+            <div class="b-sub">Instant Live Odds & Session Signals</div>
+          </div>
+        </div>
+        <div class="btn-badge">
+          <span>JOIN</span> <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
+        </div>
+      </a>
+
+      <!-- Button 2: Instant Access Backup Channel -->
+      <!-- Replace 'https://t.me/your_backup_link' with your backup invite link -->
+      <a href="https://telegram.me/+JEMm-XMx9lM1NmZl" class="btn-action btn-vip-secondary action-click" target="_blank" rel="noopener">
+        <div class="btn-left">
+          <div class="btn-icon">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div class="btn-texts">
+            <div class="b-title">JOIN BACKUP CHANNEL [INSTANT]</div>
+            <div class="b-sub">100% Free Entry • Never Miss Update</div>
+          </div>
+        </div>
+        <div class="btn-badge">
+          <span>FREE</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Quick Utilities -->
+    <div class="utility-bar">
+      <button class="util-btn" id="shareBtn">
+        <i class="fa-solid fa-share-nodes"></i> Share
+      </button>
+      <button class="util-btn" id="soundBtn">
+        <i class="fa-solid fa-volume-high" id="soundIcon"></i> Sound: ON
+      </button>
+    </div>
+
+    <!-- Trust Row -->
+    <div class="trust-row">
+      <span><i class="fa-solid fa-circle-check"></i> Verified Channel</span>
+      <span><i class="fa-solid fa-shield-halved"></i> 100% Private</span>
+      <span><i class="fa-solid fa-bolt"></i> Zero Delay</span>
+    </div>
+
+  </main>
+
+  <!-- Interactive Toast Notification -->
+  <div class="toast" id="toastBox">
+    <i class="fa-solid fa-circle-check" style="color: var(--cyan);"></i>
+    <span id="toastMsg">Channel ID copied!</span>
+  </div>
+
+  <!-- Optimized JavaScript Engine -->
+  <script>
+    /* Audio Synthesizer (No external sound files, ultra-fast Web Audio) */
+    let audioEnabled = true;
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playTactileClick(freq = 680, duration = 0.05, type = 'sine') {
+      if (!audioEnabled) return;
+      try {
+        const ctx = getAudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + duration);
+        gain.gain.setValueAtTime(0.07, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (err) {}
+    }
+
+    // Toggle Sound Button
+    const soundBtn = document.getElementById('soundBtn');
+    const soundIcon = document.getElementById('soundIcon');
+    soundBtn.addEventListener('click', () => {
+      audioEnabled = !audioEnabled;
+      if (audioEnabled) {
+        soundIcon.className = 'fa-solid fa-volume-high';
+        soundBtn.innerHTML = `<i class="fa-solid fa-volume-high"></i> Sound: ON`;
+        playTactileClick(880, 0.07);
+        triggerToast("Sound effects enabled");
+      } else {
+        soundBtn.innerHTML = `<i class="fa-solid fa-volume-xmark"></i> Sound: OFF`;
+        triggerToast("Sound muted");
+      }
+    });
+
+    // Touch Ripple Engine
+    document.querySelectorAll('.action-click').forEach(button => {
+      button.addEventListener('click', function(e) {
+        playTactileClick(560, 0.08, 'triangle');
+
+        const circle = document.createElement('span');
+        const diameter = Math.max(button.clientWidth, button.clientHeight);
+        const radius = diameter / 2;
+        const rect = button.getBoundingClientRect();
+
+        circle.style.width = circle.style.height = `${diameter}px`;
+        circle.style.left = `${e.clientX - rect.left - radius}px`;
+        circle.style.top = `${e.clientY - rect.top - radius}px`;
+        circle.classList.add('ripple-effect');
+
+        const prevRipple = button.querySelector('.ripple-effect');
+        if (prevRipple) prevRipple.remove();
+        button.appendChild(circle);
+      });
+    });
+
+    // Toast Notification helper
+    function triggerToast(text) {
+      const box = document.getElementById('toastBox');
+      document.getElementById('toastMsg').innerText = text;
+      box.classList.add('show');
+      setTimeout(() => {
+        box.classList.remove('show');
+      }, 2500);
+    }
+
+    // Copy Channel ID
+    document.getElementById('copyIdButton').addEventListener('click', () => {
+      playTactileClick(800, 0.05);
+      copyText('1898685786');
+      triggerToast('Channel ID copied to clipboard!');
+    });
+
+    // Share Trigger
+    document.getElementById('shareBtn').addEventListener('click', () => {
+      playTactileClick(700, 0.05);
+      if (navigator.share) {
+        navigator.share({
+          title: 'MARKET LOAD KING',
+          text: 'Join MARKET LOAD KING — Official No-1 Market Load Channel',
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        copyText(window.location.href);
+        triggerToast('Page link copied to clipboard!');
+      }
+    });
+
+    function copyText(str) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(str).catch(() => execCopy(str));
+      } else {
+        execCopy(str);
+      }
+    }
+
+    function execCopy(str) {
+      const input = document.createElement('input');
+      input.value = str;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+    }
+
+    // Smooth subscriber count animation (91,960 -> 92,012)
+    function runSubscriberCount(start, end, duration) {
+      const el = document.getElementById('subCount');
+      const startTime = performance.now();
+
+      function tick(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        const val = Math.floor(start + (end - start) * ease);
+        el.innerText = val.toLocaleString('en-US');
+
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          el.innerText = end.toLocaleString('en-US');
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      runSubscriberCount(91960, 92012, 1600);
+    });
+
+    // Fluctuating active viewer counter for live feel
+    const viewersEl = document.getElementById('activeViewers');
+    setInterval(() => {
+      const cur = parseInt(viewersEl.innerText, 10);
+      const delta = Math.floor(Math.random() * 9) - 4; // -4 to +4
+      const next = Math.max(460, Math.min(620, cur + delta));
+      viewersEl.innerText = next;
+    }, 3800);
+
+    // Particle Constellation (Ultra smooth 60fps GPU loop)
+    const canvas = document.getElementById('fx-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let nodes = [];
+
+    function setupCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', setupCanvas);
+    setupCanvas();
+
+    class Node {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2 + 0.5;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.alpha = Math.random() * 0.5 + 0.2;
+        this.color = Math.random() > 0.4 ? '0, 210, 255' : '251, 191, 36';
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+          this.reset();
+        }
+      }
+      render() {
+        ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const NODE_COUNT = Math.min(42, Math.floor(window.innerWidth / 12));
+    for (let i = 0; i < NODE_COUNT; i++) {
+      nodes.push(new Node());
+    }
+
+    function animationLoop() {
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 85) {
+            ctx.strokeStyle = `rgba(0, 210, 255, ${0.1 * (1 - dist / 85)})`;
+            ctx.lineWidth = 0.6;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      nodes.forEach(node => {
+        node.update();
+        node.render();
+      });
+
+      requestAnimationFrame(animationLoop);
+    }
+    animationLoop();
+  </script>
+</body>
+</html>
